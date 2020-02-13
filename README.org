@@ -1,0 +1,12 @@
+* letsencrypt-nginx
+
+This is a simple docker container that expands on the official nginx container to include letsencrypt to generate certificates.
+
+
+** Usage
+
+Once the container is running you will likely want to run certbot to create your certificates and update the configuration of nginx; something like the following.
+
+: docker exec -it "$container_name" certbot run
+
+It is also advisable to set up a cron job on the host system to periodically renew the certificates.
