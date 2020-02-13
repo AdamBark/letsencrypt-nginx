@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -m
 nginx -g "daemon off;" &
