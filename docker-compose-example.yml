@@ -1,0 +1,15 @@
+version: '2'
+services:
+  web:
+    image: 10bitadam/letsencrypt-nginx
+    environment:
+      DOMAINS: example.example.com
+    volumes:
+      - 'letsencrypt:/etc/letsencrypt'
+    ports:
+      - '80:80'
+      - '443:443'
+    restart: always
+
+volumes:
+  letsencrypt:

@@ -5,8 +5,42 @@ This is a simple docker container that expands on the official nginx container t
 
 ** Usage
 
+: docker run 10bitadam/letsencrypt-nginx
+
+to start the container
+
+** Installing a certificate
+
 Once the container is running you will likely want to run certbot to create your certificates and update the configuration of nginx; something like the following.
 
 : docker exec -it "$container_name" certbot run
 
 It is also advisable to set up a cron job on the host system to periodically renew the certificates.
+
+: docker exec "$container_name" certbot renew
+
+** Persistent certificates
+
+It's advisable to create a volume for /etc/letsencrypt so that your certificates don't go away when your droplet is destroyed.
+
+: docker run -v letsencrypt:/etc/letsencrypt 10bitadam/letsencrypt-nginx
+
+** Configuring nginx
+
+The nginx container uses =/etc/nginx/conf.d/default.conf= as the default configuration. Any =.conf= in =/etc/nginx/conf.d= will be used as nginx configuration so a volume can be used here too.
+
+: docker run -v /path/to/confs:/etc/nginx/conf.d 10bitadam/letsencrypt-nginx
+
+** Adding content
+
+Web content can be shared with a volume as well.
+
+: docker run -v /path/to/web-stuff:/var/www/html 10bitadam/letsencrypt-nginx
+
+The right hand side of the volume is just an example as that path will be defined in configuration but that is the default
+
+** Reinstall certificates
+
+To have the container install already issued certificates without having to configure ssl in nginx manually, i.e. certbot installed a certificate, the container got destroyed and now a new container is started with the letsencrypt volume, define the domains that should be installed with an environment variable.
+
+: docker run --env DOMAINS='blog.example.com cool.example.com' 10bitadam/letsencrypt-nginx
